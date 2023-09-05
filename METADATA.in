@@ -1,0 +1,22 @@
+Metadata-Version: 2.0
+Name: medcoupling
+Version: @PACKAGE_VERSION@
+Summary: Powerful library to manipulate meshes and fields
+Home-page:  https://www.salome-platform.org/downloads
+Author: EDF R&D
+Author-email: eric.fayolle@edf.fr
+License: LGPL
+Keywords: salome mesh numerical simulation
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Intended Audience :: Science/Research
+Requires-Dist: numpy
+
+Powerful library to manipulate meshes and fields from SALOME platform
