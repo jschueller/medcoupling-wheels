@@ -32,7 +32,7 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           conda install -y twine
-          twine upload --non-interactive wheelhouse/*.whl --repository testpypi
+          twine upload --non-interactive wheelhouse/*.whl
 
   windows:
     runs-on: windows-latest
@@ -79,5 +79,5 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           conda install -y twine
-          twine upload --non-interactive wheelhouse/*.whl --repository testpypi
+          twine upload --non-interactive wheelhouse/*.whl
 
