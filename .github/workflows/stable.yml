@@ -40,19 +40,16 @@ jobs:
       contents: write
     strategy:
       matrix:
+        version: [9.11.0, 9.12.0]
         include:
           - abi: cp38
             python-version: '3.8'
-            version: [9.11.0, 9.12.0]
           - abi: cp39
             python-version: '3.9'
-            version: [9.11.0, 9.12.0]
           - abi: cp310
             python-version: '3.10'
-            version: [9.11.0, 9.12.0]
           - abi: cp311
             python-version: '3.11'
-            version: [9.11.0, 9.12.0]
 
     steps:
       - uses: actions/checkout@v3
