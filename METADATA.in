@@ -17,6 +17,7 @@ Classifier: Programming Language :: C
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Physics
 Classifier: Intended Audience :: Science/Research
+Requires-Python: >=3.8
 Requires-Dist: numpy
 
 Powerful library to manipulate meshes and fields from SALOME platform
