@@ -3,7 +3,7 @@
 set -e -x
 
 test $# = 2 || exit 1
-
+PKGNAME="medcoupling"
 VERSION="$1"
 ABI="$2"
 
@@ -45,21 +45,18 @@ cd install/lib/python*/site-packages
 rm -rf __pycache__
 
 # write metadata
-mkdir medcoupling-${VERSION}.dist-info
-sed "s|@PACKAGE_VERSION@|${VERSION}|g" ${SCRIPTPATH}/METADATA.in > medcoupling-${VERSION}.dist-info/METADATA
-echo -e "Wheel-Version: 1.0" > medcoupling-${VERSION}.dist-info/WHEEL
-for f in `find *.py *.so medcoupling-${VERSION}.dist-info -type f`; do echo "$f,," >> medcoupling-${VERSION}.dist-info/RECORD ; done
+python ${SCRIPTPATH}/write_distinfo.py ${PKGNAME} ${VERSION} ${TAG}
 
 # create archive
-zip -r medcoupling-${VERSION}-${TAG}.whl *.py *.so medcoupling-${VERSION}.dist-info
+zip -r ${PKGNAME}-${VERSION}-${TAG}.whl *.py *.so ${PKGNAME}-${VERSION}.dist-info
 
-auditwheel show medcoupling-${VERSION}-${TAG}.whl
-auditwheel repair medcoupling-${VERSION}-${TAG}.whl -w /io/wheelhouse/
+auditwheel show ${PKGNAME}-${VERSION}-${TAG}.whl
+auditwheel repair ${PKGNAME}-${VERSION}-${TAG}.whl -w /io/wheelhouse/
 
 # test
 cd /tmp
 pip uninstall -y scipy
-pip install medcoupling --pre --no-index -f /io/wheelhouse
+pip install ${PKGNAME} --pre --no-index -f /io/wheelhouse
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"

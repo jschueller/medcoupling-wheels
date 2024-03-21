@@ -1,12 +1,21 @@
 @echo on
+
+set PKGNAME="medcoupling"
 set VERSION=%1%
 set ABI=%2%
 set PY_VER=%ABI:~2,1%.%ABI:~3%
+set PLATFORM="win_amd64"
+set PYTAG=%ABI%
+set TAG="%PYTAG%-%ABI%-%PLATFORM%"
 
 echo "ABI=%ABI%"
 echo "PY_VER=%PY_VER%"
+echo "PLATFORM=%PLATFORM%"
+echo "PYTAG=%PYTAG%"
+echo "TAG=%TAG%"
 echo "PATH=%PATH%"
 
+set DEST_FOLDER="C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages"
 set PYTHON_ROOT=%pythonLocation%
 python --version
 
@@ -101,22 +110,20 @@ cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Librari
 cmake --build build_medcoupling --config Release --target install
 
 :: build wheel
-xcopy /y C:\Libraries\libxml2\bin\*.dll C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
-xcopy /y C:\Libraries\hdf5\bin\hdf5.dll C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
-xcopy /y C:\Libraries\med\lib\medC.dll C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
-xcopy /y C:\Libraries\medcoupling\lib\*.dll C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
-rem  xcopy /y C:\Libraries\boost\lib\*.dll C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
+xcopy /y C:\Libraries\libxml2\bin\*.dll %DEST_FOLDER%
+xcopy /y C:\Libraries\hdf5\bin\hdf5.dll %DEST_FOLDER%
+xcopy /y C:\Libraries\med\lib\medC.dll %DEST_FOLDER%
+xcopy /y C:\Libraries\medcoupling\lib\*.dll %DEST_FOLDER%
+rem  xcopy /y C:\Libraries\boost\lib\*.dll %DEST_FOLDER%
 
 curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Dependencies_x64_Release_.without.peview.exe.zip
 7z x Dependencies_x64_Release_.without.peview.exe.zip
-Dependencies.exe -modules C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages\_medcoupling.pyd
+Dependencies.exe -modules %DEST_FOLDER%\_medcoupling.pyd
 
-pushd C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
-mkdir medcoupling-%VERSION%.dist-info
-sed "s|@PACKAGE_VERSION@|%VERSION%|g" %GITHUB_WORKSPACE%\METADATA.in > medcoupling-%VERSION%.dist-info\METADATA
-type medcoupling-%VERSION%.dist-info\METADATA
-echo Wheel-Version: 1.0 > medcoupling-%VERSION%.dist-info\WHEEL
-echo medcoupling-%VERSION%.dist-info\RECORD,, > medcoupling-%VERSION%.dist-info\RECORD
+pushd %DEST_FOLDER%
+
+python .\write_distinfo.py %DEST_FOLDER% %PKGNAME% %VERSION% %TAG%
+
 mkdir %GITHUB_WORKSPACE%\wheelhouse
 7z a -tzip %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl *.py *.pyd *.dll medcoupling-%VERSION%.dist-info
 pip install %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl

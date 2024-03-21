@@ -1,5 +1,5 @@
 Metadata-Version: 2.0
-Name: medcoupling
+Name: @PACKAGE_NAME@
 Version: @PACKAGE_VERSION@
 Summary: Powerful library to manipulate meshes and fields
 Home-page:  https://www.salome-platform.org/downloads
