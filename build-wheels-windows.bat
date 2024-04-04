@@ -66,7 +66,7 @@ call bootstrap.bat
     -s ZSTD_LIBPATH=%PREFIX%\Library\lib ^
     -s ZSTD_BINARY=zstd ^
     --layout=system ^
-    --with-serialization --with-filesystem --with-date_time --with-chrono --with-thread --with-regex --with-system
+    --with-serialization --with-filesystem --with-date_time --with-chrono --with-thread --with-regex --with-system > nul
 popd
 
 :: hdf5
@@ -76,18 +76,20 @@ cmake --build build_hdf5 --config Release --target install
 
 :: med
 set "MED_VERSION=4.1.1"
-curl -LO https://files.salome-platform.org/Salome/other/med-%MED_VERSION%.tar.gz
+curl -LO https://www.code-saturne.org/releases/external/med-%MED_VERSION%.tar.gz
 7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
 cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
 
+:: configuration
 git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/configuration.git
 
+:: medcoupling
 pip install scipy
-
-git clone --depth 1 -b V%VERSION:.=_% http://git.salome-platform.org/gitpub/tools/medcoupling.git
+git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/medcoupling.git
+patch -p1 -i %GITHUB_WORKSPACE%\medcoupling913-numpy2.patch -d medcoupling
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Libraries/medcoupling ^
   -DMEDFILE_ROOT_DIR=C:/Libraries/med ^
   -DMETIS_ROOT_DIR=C:/Libraries/metis ^
@@ -114,9 +116,11 @@ Dependencies.exe -modules C:\Libraries\medcoupling\lib\python%PY_VER%\site-packa
 pushd C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages
 mkdir medcoupling-%VERSION%.dist-info
 sed "s|@PACKAGE_VERSION@|%VERSION%|g" %GITHUB_WORKSPACE%\METADATA.in > medcoupling-%VERSION%.dist-info\METADATA
+python %GITHUB_WORKSPACE%\write_distinfo.py medcoupling %VERSION% %ABI%-%ABI%-win_amd64
+
 type medcoupling-%VERSION%.dist-info\METADATA
-echo Wheel-Version: 1.0 > medcoupling-%VERSION%.dist-info\WHEEL
-echo medcoupling-%VERSION%.dist-info\RECORD,, > medcoupling-%VERSION%.dist-info\RECORD
+type medcoupling-%VERSION%.dist-info\WHEEL
+
 mkdir %GITHUB_WORKSPACE%\wheelhouse
 7z a -tzip %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl *.py *.pyd *.dll medcoupling-%VERSION%.dist-info
 pip install %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl
@@ -125,3 +129,4 @@ pushd %GITHUB_WORKSPACE%
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+python .\medcoupling\src\MEDCoupling_Swig\MEDCouplingNumPyTest.py

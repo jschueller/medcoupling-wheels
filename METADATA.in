@@ -1,8 +1,8 @@
-Metadata-Version: 2.0
+Metadata-Version: 1.2
 Name: medcoupling
 Version: @PACKAGE_VERSION@
 Summary: Powerful library to manipulate meshes and fields
-Home-page:  https://www.salome-platform.org/downloads
+Home-page: https://docs.salome-platform.org/latest/dev/MEDCoupling/developer/index.html
 Author: EDF R&D
 Author-email: eric.fayolle@edf.fr
 License: LGPL
@@ -10,13 +10,36 @@ Keywords: salome mesh numerical simulation
 Platform: any
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
-Classifier: Operating System :: Microsoft :: Windows
-Classifier: Operating System :: MacOS :: MacOS X
-Classifier: Operating System :: POSIX :: Linux
-Classifier: Programming Language :: C
+Classifier: Programming Language :: C++
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Physics
 Classifier: Intended Audience :: Science/Research
-Requires-Dist: numpy
+Requires-Dist: scipy
 
-Powerful library to manipulate meshes and fields from SALOME platform
+
+# MEDCoupling
+
+[![pypi](https://img.shields.io/pypi/v/medcoupling.svg?style=flat-square)](https://pypi.org/project/medcoupling)
+https://github.com/jschueller/medcoupling-wheels
+[![github](https://github.com/jschueller/medcoupling-wheels/actions/workflows/stable.yml/badge.svg?branch=master)](https://github.com/jschueller/medcoupling-wheels/actions/workflows/stable.yml)
+
+
+MEDCoupling is a powerful library to manipulate meshes and fields from the [SALOME](https://www.salome-platform.org/) platform.
+
+Refer to the [documentation](https://docs.salome-platform.org/latest/dev/MEDCoupling/developer/index.html).
+
+## Installation from PyPI
+
+To install MEDCoupling, you can now simply do
+
+```
+pip install -U medcoupling
+```
+
+Binary wheels are available for 64-bit Windows (`win_amd64`) and Linux-like platforms (`manylinux2014_x86_64`).
+
+To ensure that MEDCoupling is well installed, try importing it with:
+
+```
+import medcoupling  # should not raise error
+```
