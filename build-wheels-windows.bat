@@ -87,7 +87,7 @@ cmake --build build_hdf5 --config Release --target install
 set "MED_VERSION=5.0.0"
 REM The download link changed (it's generated after filing a form on salome website)
 echo "downloading med"
-curl -LO "https://www.salome-platform.org/?sdm_process_download=1&download_id=2540" --output med-%MED_VERSION%.tar.bz2
+curl -LO https://files.salome-platform.org/Salome/medfile/med-%MED_VERSION%.tar.bz2
 echo "ended downloading med"
 dir
 echo "extracting med"
