@@ -19,8 +19,9 @@ export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 cd /tmp
 
 # med
-MED_VERSION=4.1.1
-curl -fSsL https://files.salome-platform.org/Salome/other/med-${MED_VERSION}.tar.gz | tar xz
+MED_VERSION=5.0.0
+# The download link changed (it's generated after filing a form on salome website)
+curl -fSsL https://www.salome-platform.org/?sdm_process_download=1&download_id=2540 | tar xz
 cmake -S med-${MED_VERSION}_SRC -B build_med -LAH -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install \
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF -DHDF5_DIR=$PWD/install/share/cmake/hdf5 \
   -DCMAKE_INSTALL_RPATH="${PWD}/install/lib;/usr/local/lib" -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON

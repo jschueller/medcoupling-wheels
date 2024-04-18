@@ -84,8 +84,9 @@ cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=C:/Libraries/hdf5 -DBUIL
 cmake --build build_hdf5 --config Release --target install
 
 :: med
-set "MED_VERSION=4.1.1"
-curl -LO https://files.salome-platform.org/Salome/other/med-%MED_VERSION%.tar.gz
+set "MED_VERSION=5.0.0"
+REM The download link changed (it's generated after filing a form on salome website)
+curl -LO https://www.salome-platform.org/?sdm_process_download=1&download_id=2540
 7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
 cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
