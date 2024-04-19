@@ -3,7 +3,7 @@
 set PKGNAME="medcoupling"
 set VERSION=%1%
 set ABI=%2%
-set "MED_VERSION=5.0.0"
+set "MED_VERSION=4.1.1"
 set PY_VER=%ABI:~2,1%.%ABI:~3%
 set PLATFORM="win_amd64"
 set PYTAG=%ABI%
@@ -87,11 +87,11 @@ cmake --build build_hdf5 --config Release --target install
 :: med
 REM The download link changed (it's generated after filing a form on salome website)
 echo "downloading med"
-curl -LO https://files.salome-platform.org/Salome/medfile/med-%MED_VERSION%.tar.bz2
+curl -LO https://files.salome-platform.org/Salome/medfile/med-%MED_VERSION%.tar.gz
 echo "ended downloading med"
 dir
 echo "extracting med"
-7z x med-%MED_VERSION%.tar.bz2 > nul
+7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
 echo "end extracting med"
 dir
