@@ -42,6 +42,8 @@ Creates RECORD and WHEEL files
     path = dist_info_folder / "RECORD"
     with path.open("w") as record:
         for subdir in [base_folder_path, path]:
+            if not subdir.is_dir():
+                continue
             for fpath in subdir.iterdir():
                 if not fpath.is_file():
                     continue
