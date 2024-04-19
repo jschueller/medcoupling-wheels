@@ -15,7 +15,7 @@ TAG=${PYTAG}-${ABI}-${PLATFORM}
 PYVERD=${ABI:2:1}.${ABI:3}
 
 SCRIPT=`readlink -f "$0"`
-SCRIPTPATH=`dirname "$SCRIPT"`
+SCRIPTPATH=$PWD
 export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 
 cd /tmp
@@ -46,8 +46,7 @@ cd install/lib/python*/site-packages
 rm -rf __pycache__
 
 # write metadata
-# python ${SCRIPTPATH}/write_distinfo.py ${PKGNAME} ${VERSION} ${TAG}
-python ./write_distinfo.py install/lib/python*/site-packages ${PKGNAME} ${VERSION} ${TAG}
+python ${SCRIPTPATH}/write_distinfo.py ${PWD} ${PKGNAME} ${VERSION} ${TAG}
 
 # create archive
 zip -r ${PKGNAME}-${VERSION}-${TAG}.whl *.py *.so ${PKGNAME}-${VERSION}.dist-info

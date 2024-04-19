@@ -8,6 +8,7 @@ set PY_VER=%ABI:~2,1%.%ABI:~3%
 set PLATFORM="win_amd64"
 set PYTAG=%ABI%
 set TAG="%PYTAG%-%ABI%-%PLATFORM%"
+set SCRIPTPATH="%CD%"
 
 echo "ABI=%ABI%"
 echo "PY_VER=%PY_VER%"
@@ -129,7 +130,7 @@ Dependencies.exe -modules %DEST_FOLDER%\_medcoupling.pyd
 
 pushd %DEST_FOLDER%
 
-python .\write_distinfo.py %DEST_FOLDER% %PKGNAME% %VERSION% %TAG%
+python %SCRIPTPATH%\write_distinfo.py %DEST_FOLDER% %PKGNAME% %VERSION% %TAG%
 
 mkdir %GITHUB_WORKSPACE%\wheelhouse
 7z a -tzip %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl *.py *.pyd *.dll medcoupling-%VERSION%.dist-info
