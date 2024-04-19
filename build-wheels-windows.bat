@@ -1,7 +1,6 @@
 @echo on
 
-set PKGNAME="medcoupling"
-set VERSION=%1%
+set VERSION="9.12.0"
 set ABI=%2%
 set "MED_VERSION=4.1.1"
 set PY_VER=%ABI:~2,1%.%ABI:~3%
@@ -17,7 +16,7 @@ echo "PYTAG=%PYTAG%"
 echo "TAG=%TAG%"
 echo "PATH=%PATH%"
 
-set DEST_FOLDER="C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages"
+set BUILD_DIR="C:\Libraries\medcoupling\lib\python%PY_VER%\site-packages"
 set PYTHON_ROOT=%pythonLocation%
 python --version
 
@@ -118,24 +117,19 @@ cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Librari
 cmake --build build_medcoupling --config Release --target install
 
 :: build wheel
-xcopy /y C:\Libraries\libxml2\bin\*.dll %DEST_FOLDER%
-xcopy /y C:\Libraries\hdf5\bin\hdf5.dll %DEST_FOLDER%
-xcopy /y C:\Libraries\med\lib\medC.dll %DEST_FOLDER%
-xcopy /y C:\Libraries\medcoupling\lib\*.dll %DEST_FOLDER%
-rem  xcopy /y C:\Libraries\boost\lib\*.dll %DEST_FOLDER%
+xcopy /y C:\Libraries\libxml2\bin\*.dll %BUILD_DIR%
+xcopy /y C:\Libraries\hdf5\bin\hdf5.dll %BUILD_DIR%
+xcopy /y C:\Libraries\med\lib\medC.dll %BUILD_DIR%
+xcopy /y C:\Libraries\medcoupling\lib\*.dll %BUILD_DIR%
+rem  xcopy /y C:\Libraries\boost\lib\*.dll %BUILD_DIR%
 
 curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Dependencies_x64_Release_.without.peview.exe.zip
 7z x Dependencies_x64_Release_.without.peview.exe.zip
-Dependencies.exe -modules %DEST_FOLDER%\_medcoupling.pyd
+Dependencies.exe -modules %BUILD_DIR%\_medcoupling.pyd
 
-pushd %DEST_FOLDER%
+cd %SCRIPT_PATH%
 
-python %SCRIPTPATH%\write_distinfo.py %DEST_FOLDER% %PKGNAME% %VERSION% %TAG%
-
-mkdir %GITHUB_WORKSPACE%\wheelhouse
-7z a -tzip %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl *.py *.pyd *.dll medcoupling-%VERSION%.dist-info
-pip install %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl
-pushd %GITHUB_WORKSPACE%
+python -m build --wheel %BUILD_DIR%
 
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
