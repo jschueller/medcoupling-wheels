@@ -94,6 +94,7 @@ echo "extracting med"
 7z x med-%MED_VERSION%.tar.bz2 > nul
 7z x med-%MED_VERSION%.tar > nul
 echo "end extracting med"
+dir
 cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
