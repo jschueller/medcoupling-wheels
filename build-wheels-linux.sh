@@ -46,7 +46,8 @@ cd install/lib/python*/site-packages
 rm -rf __pycache__
 
 # write metadata
-python ${SCRIPTPATH}/write_distinfo.py ${PKGNAME} ${VERSION} ${TAG}
+# python ${SCRIPTPATH}/write_distinfo.py ${PKGNAME} ${VERSION} ${TAG}
+python ./write_distinfo.py install/lib/python*/site-packages ${PKGNAME} ${VERSION} ${TAG}
 
 # create archive
 zip -r ${PKGNAME}-${VERSION}-${TAG}.whl *.py *.so ${PKGNAME}-${VERSION}.dist-info

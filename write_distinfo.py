@@ -3,6 +3,7 @@ import base64
 import sys
 from pathlib import Path
 
+
 def main(base_folder: str, package_name: str, version: str, tag: str):
     """
 Creates a dist-info directory in the current working directory,
@@ -14,6 +15,11 @@ Creates RECORD and WHEEL files
 
     if not base_folder_path.exists():
         raise NotADirectoryError(f"base_folder {base_folder} is not a directory")
+
+    version_file = base_folder_path / "__init__.py"
+
+    with version_file.open("a") as f:
+        f.write(f"__version__=\"{version}\"")
 
     dist_info_folder = base_folder_path / f"{package_name}-{version}.dist-info"
     if not dist_info_folder.exists():
