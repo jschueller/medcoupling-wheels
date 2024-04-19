@@ -25,7 +25,7 @@ Creates RECORD and WHEEL files
     if not dist_info_folder.exists():
         dist_info_folder.mkdir()
 
-    metadata_file = Path("METADATA.in")
+    metadata_file = base_folder_path / "METADATA.in"
     if not metadata_file.exists():
         raise FileNotFoundError(f"Missing {metadata_file}")
 
