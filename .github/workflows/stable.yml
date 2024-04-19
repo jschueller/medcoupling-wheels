@@ -41,6 +41,7 @@ jobs:
       contents: write
     strategy:
       matrix:
+        version: [9.12.0]
         include:
           - abi: cp38
             python-version: '3.8'
@@ -67,7 +68,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: wheelhouse/medcoupling-${{ matrix.version }}-${{ matrix.abi }}-${{ matrix.abi }}-win_amd64.whl
+          files: dist/*.whl
       - name: Upload
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash -l {0}
@@ -76,5 +77,5 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           conda install -y twine
-          twine upload --non-interactive wheelhouse/*.whl
+          twine upload --non-interactive dist/*.whl
 

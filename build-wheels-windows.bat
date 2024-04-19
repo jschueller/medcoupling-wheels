@@ -1,6 +1,6 @@
 @echo on
 
-set VERSION="9.12.0"
+set VERSION=%1%
 set ABI=%2%
 set "MED_VERSION=4.1.1"
 set PY_VER=%ABI:~2,1%.%ABI:~3%
