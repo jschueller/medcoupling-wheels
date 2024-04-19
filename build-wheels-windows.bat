@@ -128,8 +128,13 @@ curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Depend
 Dependencies.exe -modules %BUILD_DIR%\_medcoupling.pyd
 
 cd %SCRIPT_PATH%
+echo %BUILD_DIR%
+dir %BUILD_DIR%
 
 xcopy /y %BUILD_DIR% "./build_dir"
+
+echo "./build_dir"
+dir build_dir
 
 python -m build --wheel %BUILD_DIR%
 
