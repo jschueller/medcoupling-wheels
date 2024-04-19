@@ -18,7 +18,7 @@ Creates RECORD and WHEEL files
 
     version_file = base_folder_path / "__init__.py"
 
-    with version_file.open("a") as f:
+    with version_file.open("x") as f:
         f.write(f"__version__=\"{version}\"")
 
     dist_info_folder = base_folder_path / f"{package_name}-{version}.dist-info"

@@ -13,9 +13,11 @@ PLATFORM=manylinux2014_x86_64
 PYTAG=${ABI/m/}
 TAG=${PYTAG}-${ABI}-${PLATFORM}
 PYVERD=${ABI:2:1}.${ABI:3}
-
 SCRIPT=`readlink -f "$0"`
-SCRIPTPATH=$PWD
+SCRIPTDIR=`dirname "$SCRIPT"`
+
+echo "Script directory = $SCRIPTDIR"
+
 export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 
 cd /tmp
@@ -46,7 +48,7 @@ cd install/lib/python*/site-packages
 rm -rf __pycache__
 
 # write metadata
-python ${SCRIPTPATH}/write_distinfo.py ${PWD} ${PKGNAME} ${VERSION} ${TAG}
+python ${SCRIPTDIR}/write_distinfo.py ${PWD} ${PKGNAME} ${VERSION} ${TAG}
 
 # create archive
 zip -r ${PKGNAME}-${VERSION}-${TAG}.whl *.py *.so ${PKGNAME}-${VERSION}.dist-info
@@ -61,3 +63,4 @@ pip install ${PKGNAME} --pre --no-index -f /io/wheelhouse
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
 python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+
