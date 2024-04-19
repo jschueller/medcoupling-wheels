@@ -129,6 +129,8 @@ Dependencies.exe -modules %BUILD_DIR%\_medcoupling.pyd
 
 cd %SCRIPT_PATH%
 
+xcopy /y %BUILD_DIR% "./build_dir"
+
 python -m build --wheel %BUILD_DIR%
 
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"

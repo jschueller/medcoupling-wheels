@@ -29,7 +29,7 @@ Repository = "https://git.salome-platform.org/gitweb"
 requires = ["setuptools>=60", ]
 
 [tool.setuptools.packages.find]
-where = ["install"]
+where = ["build_dir"]
 
 [tool.setuptools.package-data]
 "*" = ["*"]
