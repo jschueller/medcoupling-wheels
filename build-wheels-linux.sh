@@ -6,6 +6,8 @@ test $# = 2 || exit 1
 PKGNAME="medcoupling"
 VERSION="$1"
 ABI="$2"
+# med
+MED_VERSION=5.0.0
 
 PLATFORM=manylinux2014_x86_64
 PYTAG=${ABI/m/}
@@ -18,11 +20,9 @@ export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 
 cd /tmp
 
-# med
-MED_VERSION=5.0.0
 # The download link changed (it's generated after filing a form on salome website)
-curl -fSsL https://files.salome-platform.org/Salome/medfile/med-$MED_VERSION.tar.bz2 | tar -xf
-cmake -S med-${MED_VERSION}_SRC -B build_med -LAH -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install \
+curl -fSsL https://files.salome-platform.org/Salome/medfile/med-$MED_VERSION.tar.bz2 | tar xj
+cmake -S med-${MED_VERSION} -B build_med -LAH -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install \
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF -DHDF5_DIR=$PWD/install/share/cmake/hdf5 \
   -DCMAKE_INSTALL_RPATH="${PWD}/install/lib;/usr/local/lib" -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
 cmake --build build_med --target install
