@@ -3,6 +3,7 @@
 set PKGNAME="medcoupling"
 set VERSION=%1%
 set ABI=%2%
+set "MED_VERSION=5.0.0"
 set PY_VER=%ABI:~2,1%.%ABI:~3%
 set PLATFORM="win_amd64"
 set PYTAG=%ABI%
@@ -84,7 +85,6 @@ cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=C:/Libraries/hdf5 -DBUIL
 cmake --build build_hdf5 --config Release --target install
 
 :: med
-set "MED_VERSION=5.0.0"
 REM The download link changed (it's generated after filing a form on salome website)
 echo "downloading med"
 curl -LO https://files.salome-platform.org/Salome/medfile/med-%MED_VERSION%.tar.bz2
@@ -95,7 +95,7 @@ echo "extracting med"
 7z x med-%MED_VERSION%.tar > nul
 echo "end extracting med"
 dir
-cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
+cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
 
