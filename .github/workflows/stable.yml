@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [9.11.0, 9.12.0]
+        # version: [9.11.0, 9.12.0]
+        version: [9.12.0]
         abi: [cp38, cp39, cp310, cp311]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build
         run: |
           docker build docker/manylinux -t medcoupling/manylinux
@@ -40,7 +41,8 @@ jobs:
       contents: write
     strategy:
       matrix:
-        version: [9.11.0, 9.12.0]
+        # version: [9.11.0, 9.12.0]
+        version: [9.12.0]
         include:
           - abi: cp38
             python-version: '3.8'
@@ -52,8 +54,8 @@ jobs:
             python-version: '3.11'
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           update-environment: true
