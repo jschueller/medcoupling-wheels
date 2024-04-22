@@ -59,8 +59,9 @@ cscript configure.js compiler=msvc iconv=no icu=no zlib=no lzma=no python=no ^
 nmake /f Makefile.msvc
 nmake /f Makefile.msvc install
 popd
-dir %BUILD_DEP_DIR%/libxml2
+dir
 echo "---- ENDED libxml2 INSTALLATION ----"
+dir %BUILD_DEP_DIR%\libxml2
 
 :: boost
 echo "---- BOOST INSTALLATION ----"
@@ -94,15 +95,16 @@ call bootstrap.bat
     --layout=system ^
     --with-serialization --with-filesystem --with-date_time --with-chrono --with-thread --with-regex --with-system
 popd
-dir %BUILD_DEP_DIR%/boost
+dir
 echo "---- ENDED BOOST INSTALLATION ----"
+dir %BUILD_DEP_DIR%\boost
 
 :: hdf5
 echo "---- HDF5 INSTALLATION ----"
 git clone --depth 1 -b hdf5-1_10_3 https://github.com/HDFGroup/hdf5.git hdf5
 cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/hdf5 -DBUILD_TESTING=OFF -DHDF5_BUILD_TOOLS=OFF -DHDF5_BUILD_EXAMPLES=OFF
 cmake --build build_hdf5 --config Release --target install
-dir %BUILD_DEP_DIR%/hdf5
+dir %BUILD_DEP_DIR%\hdf5
 echo "---- ENDED HDF5 INSTALLATION ----"
 
 :: med
@@ -126,19 +128,24 @@ git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/too
 
 git clone --depth 1 -b V%VERSION:.=_% http://git.salome-platform.org/gitpub/tools/medcoupling.git medcoupling
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/medcoupling ^
-  -DMEDFILE_ROOT_DIR=%BUILD_DEP_DIR%/med ^
-  -DMETIS_ROOT_DIR=%BUILD_DEP_DIR%/metis ^
-  -DHDF5_ROOT_DIR=%BUILD_DEP_DIR%/hdf5 ^
-  -DLIBXML2_ROOT_DIR=%BUILD_DEP_DIR%/libxml2 ^
-  -DBOOST_ROOT_DIR=%BUILD_DEP_DIR%/boost ^
-  -DMEDCOUPLING_BUILD_DOC=OFF -DMEDCOUPLING_BUILD_TESTS=OFF -DCONFIGURATION_ROOT_DIR=%SCRIPTPATH%/configuration ^
+  -DMEDFILE_ROOT_DIR=%BUILD_DEP_DIR%\med ^
+  -DMETIS_ROOT_DIR=%BUILD_DEP_DIR%\metis ^
+  -DHDF5_ROOT_DIR=%BUILD_DEP_DIR%\hdf5 ^
+  -DLIBXML2_ROOT_DIR=%BUILD_DEP_DIR%\libxml2 ^
+  -DBOOST_ROOT_DIR=%BUILD_DEP_DIR%\boost ^
+  -DMEDCOUPLING_BUILD_DOC=OFF -DMEDCOUPLING_BUILD_TESTS=OFF -DCONFIGURATION_ROOT_DIR=%SCRIPTPATH%\configuration ^
   -DPYTHON_LIBRARY=%PYTHON_ROOT%\libs\python%ABI:~2%.lib -DPYTHON_INCLUDE_DIR=%PYTHON_ROOT%\include ^
   -DPYTHON_EXECUTABLE=%PYTHON_ROOT%\python.exe ^
   -DMEDCOUPLING_PARTITIONER_METIS=OFF -DMEDCOUPLING_PARTITIONER_SCOTCH=OFF -DMEDCOUPLING_PARTITIONER_METIS=ON -DMEDCOUPLING_USE_64BIT_IDS=OFF
 cmake --build build_medcoupling --config Release --target install
 popd
-dir %BUILD_DEP_DIR%/medcoupling
+dir
 echo "---- ENDED MED INSTALLATION ----"
+
+dir %BUILD_DEP_DIR%\medcoupling
+
+popd
+dir
 
 :: build wheel
 echo "---- BUILDING WHEEL ----"
