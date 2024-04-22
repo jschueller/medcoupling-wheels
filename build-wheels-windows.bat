@@ -47,6 +47,7 @@ mkdir %BUILD_DEP_DIR%\metis\include
 copy METIS\include\metis.h %BUILD_DEP_DIR%\metis\include
 mkdir %BUILD_DEP_DIR%\metis\lib
 copy build_metis\libmetis\Release\metis.lib %BUILD_DEP_DIR%\metis\lib
+dir %BUILD_DEP_DIR%/metis
 echo "---- ENDED METIS INSTALLATION ----"
 
 :: libxml2
@@ -58,6 +59,7 @@ cscript configure.js compiler=msvc iconv=no icu=no zlib=no lzma=no python=no ^
 nmake /f Makefile.msvc
 nmake /f Makefile.msvc install
 popd
+dir %BUILD_DEP_DIR%/libxml2
 echo "---- ENDED libxml2 INSTALLATION ----"
 
 :: boost
@@ -92,6 +94,7 @@ call bootstrap.bat
     --layout=system ^
     --with-serialization --with-filesystem --with-date_time --with-chrono --with-thread --with-regex --with-system
 popd
+dir %BUILD_DEP_DIR%/boost
 echo "---- ENDED BOOST INSTALLATION ----"
 
 :: hdf5
@@ -99,6 +102,7 @@ echo "---- HDF5 INSTALLATION ----"
 git clone --depth 1 -b hdf5-1_10_3 https://github.com/HDFGroup/hdf5.git hdf5
 cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/hdf5 -DBUILD_TESTING=OFF -DHDF5_BUILD_TOOLS=OFF -DHDF5_BUILD_EXAMPLES=OFF
 cmake --build build_hdf5 --config Release --target install
+dir %BUILD_DEP_DIR%/hdf5
 echo "---- ENDED HDF5 INSTALLATION ----"
 
 :: med
@@ -133,6 +137,7 @@ cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DEP
   -DMEDCOUPLING_PARTITIONER_METIS=OFF -DMEDCOUPLING_PARTITIONER_SCOTCH=OFF -DMEDCOUPLING_PARTITIONER_METIS=ON -DMEDCOUPLING_USE_64BIT_IDS=OFF
 cmake --build build_medcoupling --config Release --target install
 popd
+dir %BUILD_DEP_DIR%/medcoupling
 echo "---- ENDED MED INSTALLATION ----"
 
 :: build wheel
