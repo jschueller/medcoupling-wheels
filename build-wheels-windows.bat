@@ -19,6 +19,9 @@ echo "PATH=%PATH%"
 set BUILD_DIR="%SCRIPTPATH%\build_dir"
 set MEDCOUPLING_BUILD_DIR="%BUILD_DIR%\medcoupling"
 set PYTHON_ROOT=%pythonLocation%
+
+mkdir %MEDCOUPLING_BUILD_DIR%
+
 python --version
 python -m pip install build
 
