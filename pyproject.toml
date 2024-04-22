@@ -29,8 +29,16 @@ Repository = "https://git.salome-platform.org/gitweb"
 requires = ["setuptools>=60", ]
 
 [tool.setuptools.packages.find]
-where = ["build_dir"]
+where = ["build_dir/medcoupling"]
 
-[tool.setuptools.package-data]
-"*" = ["*"]
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64"]
 
+[tool.pixi.host-dependencies]
+python = "~=3.8.19"
+
+[tool.pixi.dependencies]
+pip = "*"
+# [tool.pixi.pypi-dependencies]
+# medcoupling = { path = ".", editable = true }
