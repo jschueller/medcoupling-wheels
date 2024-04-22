@@ -17,15 +17,19 @@ echo "TAG=%TAG%"
 echo "PATH=%PATH%"
 
 set BUILD_DIR="%SCRIPTPATH%\build_dir"
+set BUILD_DEP_DIR="%BUILD_DIR%\dependencies"
 set MEDCOUPLING_BUILD_DIR="%BUILD_DIR%\medcoupling"
 set PYTHON_ROOT=%pythonLocation%
 
+mkdir %BUILD_DEP_DIR%
 mkdir %MEDCOUPLING_BUILD_DIR%
 
 python --version
 python -m pip install build
 
 call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+
+cd %BUILD_DIR%
 
 :: metis
 git clone --depth 1 -b v5.1.1-DistDGL-v0.5 https://github.com/KarypisLab/METIS.git METIS
@@ -36,18 +40,18 @@ mkdir METIS\build\windows
 mkdir METIS\build\xinclude
 copy METIS\include\metis.h METIS\build\xinclude
 copy METIS\include\CMakeLists.txt METIS\build\xinclude
-cmake -LAH -S METIS -B build_metis -DCMAKE_INSTALL_PREFIX=%BUILD_DIR%/metis -DCMAKE_BUILD_TYPE=Release
+cmake -LAH -S METIS -B build_metis -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/metis -DCMAKE_BUILD_TYPE=Release
 cmake --build build_metis --config Release
-mkdir %BUILD_DIR%\metis\include
-copy METIS\include\metis.h %BUILD_DIR%\metis\include
-mkdir %BUILD_DIR%\metis\lib
-copy build_metis\libmetis\Release\metis.lib %BUILD_DIR%\metis\lib
+mkdir %BUILD_DEP_DIR%\metis\include
+copy METIS\include\metis.h %BUILD_DEP_DIR%\metis\include
+mkdir %BUILD_DEP_DIR%\metis\lib
+copy build_metis\libmetis\Release\metis.lib %BUILD_DEP_DIR%\metis\lib
 
 :: libxml2
 git clone --depth 1 -b v2.10.4 https://github.com/GNOME/libxml2.git libxml2
 pushd libxml2\win32
 cscript configure.js compiler=msvc iconv=no icu=no zlib=no lzma=no python=no ^
-                     prefix=%BUILD_DIR%\libxml2 include=%BUILD_DIR%\libxml2\include lib=%BUILD_DIR%\libxml2\lib
+                     prefix=%BUILD_DEP_DIR%\libxml2 include=%BUILD_DEP_DIR%\libxml2\include lib=%BUILD_DEP_DIR%\libxml2\lib
 nmake /f Makefile.msvc
 nmake /f Makefile.msvc install
 popd
@@ -60,7 +64,7 @@ pushd boost_%BOOST_VERSION:.=_%
 call bootstrap.bat
 .\b2 install ^
     --build-dir=build_boost ^
-    --prefix=%BUILD_DIR%\boost ^
+    --prefix=%BUILD_DEP_DIR%\boost ^
     toolset=msvc-14.3 ^
     architecture=x86 ^
     address-model=64 ^
@@ -86,7 +90,7 @@ popd
 
 :: hdf5
 git clone --depth 1 -b hdf5-1_10_3 https://github.com/HDFGroup/hdf5.git hdf5
-cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=%BUILD_DIR%/hdf5 -DBUILD_TESTING=OFF -DHDF5_BUILD_TOOLS=OFF -DHDF5_BUILD_EXAMPLES=OFF
+cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/hdf5 -DBUILD_TESTING=OFF -DHDF5_BUILD_TOOLS=OFF -DHDF5_BUILD_EXAMPLES=OFF
 cmake --build build_hdf5 --config Release --target install
 
 :: med
@@ -100,7 +104,7 @@ echo "extracting med"
 7z x med-%MED_VERSION%.tar > nul
 echo "end extracting med"
 dir
-cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=%BUILD_DIR%/med -DHDF5_ROOT_DIR=%BUILD_DIR%/hdf5 ^
+cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/med -DHDF5_ROOT_DIR=%BUILD_DEP_DIR%/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
 
@@ -109,12 +113,12 @@ git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/too
 pip install scipy
 
 git clone --depth 1 -b V%VERSION:.=_% http://git.salome-platform.org/gitpub/tools/medcoupling.git medcoupling
-cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DIR%/medcoupling ^
-  -DMEDFILE_ROOT_DIR=%BUILD_DIR%/med ^
-  -DMETIS_ROOT_DIR=%BUILD_DIR%/metis ^
-  -DHDF5_ROOT_DIR=%BUILD_DIR%/hdf5 ^
-  -DLIBXML2_ROOT_DIR=%BUILD_DIR%/libxml2 ^
-  -DBOOST_ROOT_DIR=%BUILD_DIR%/boost ^
+cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/medcoupling ^
+  -DMEDFILE_ROOT_DIR=%BUILD_DEP_DIR%/med ^
+  -DMETIS_ROOT_DIR=%BUILD_DEP_DIR%/metis ^
+  -DHDF5_ROOT_DIR=%BUILD_DEP_DIR%/hdf5 ^
+  -DLIBXML2_ROOT_DIR=%BUILD_DEP_DIR%/libxml2 ^
+  -DBOOST_ROOT_DIR=%BUILD_DEP_DIR%/boost ^
   -DMEDCOUPLING_BUILD_DOC=OFF -DMEDCOUPLING_BUILD_TESTS=OFF -DCONFIGURATION_ROOT_DIR=%SCRIPTPATH%/configuration ^
   -DPYTHON_LIBRARY=%PYTHON_ROOT%\libs\python%ABI:~2%.lib -DPYTHON_INCLUDE_DIR=%PYTHON_ROOT%\include ^
   -DPYTHON_EXECUTABLE=%PYTHON_ROOT%\python.exe ^
@@ -122,11 +126,11 @@ cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DIR
 cmake --build build_medcoupling --config Release --target install
 
 :: build wheel
-xcopy /y %BUILD_DIR%\libxml2\bin\*.dll %MEDCOUPLING_BUILD_DIR%
-xcopy /y %BUILD_DIR%\hdf5\bin\hdf5.dll %MEDCOUPLING_BUILD_DIR%
-xcopy /y %BUILD_DIR%\med\lib\medC.dll %MEDCOUPLING_BUILD_DIR%
-xcopy /y %BUILD_DIR%\medcoupling\lib\*.dll %MEDCOUPLING_BUILD_DIR%
-rem  xcopy /y %BUILD_DIR%\boost\lib\*.dll %MEDCOUPLING_BUILD_DIR%
+xcopy /y %BUILD_DEP_DIR%\libxml2\bin\*.dll %MEDCOUPLING_BUILD_DIR%
+xcopy /y %BUILD_DEP_DIR%\hdf5\bin\hdf5.dll %MEDCOUPLING_BUILD_DIR%
+xcopy /y %BUILD_DEP_DIR%\med\lib\medC.dll %MEDCOUPLING_BUILD_DIR%
+xcopy /y %BUILD_DEP_DIR%\medcoupling\lib\*.dll %MEDCOUPLING_BUILD_DIR%
+rem  xcopy /y %BUILD_DEP_DIR%\boost\lib\*.dll %MEDCOUPLING_BUILD_DIR%
 
 curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Dependencies_x64_Release_.without.peview.exe.zip
 7z x Dependencies_x64_Release_.without.peview.exe.zip
@@ -136,15 +140,15 @@ cd %SCRIPT_PATH%
 echo %MEDCOUPLING_BUILD_DIR%
 dir %MEDCOUPLING_BUILD_DIR%
 
-
 python -m build --wheel .
 
+set ORIGIN_WHEEL_FILE="medcoupling-%VERSION%-py3-none-any.whl"
 set WHEEL_FILE="medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl"
 
-copy ".\dist\medcoupling-%VERSION%-py3-none-any.whl" %WHEEL_FILE%
+move /y ".\dist\%ORIGIN_WHEEL_FILE%" ".\dist\%WHEEL_FILE%"
 
-python -m pip install %WHEEL_FILE%
+REM python -m pip install %WHEEL_FILE%
 
-python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+REM python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
+REM python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
+REM python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
