@@ -25,13 +25,14 @@ mkdir %BUILD_DEP_DIR%
 mkdir %MEDCOUPLING_BUILD_DIR%
 
 python --version
-python -m pip install build
+python -m pip install build scipy
 
 call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
-cd %BUILD_DIR%
+pushd %BUILD_DIR%
 
 :: metis
+echo "---- METIS INSTALLATION ----"
 git clone --depth 1 -b v5.1.1-DistDGL-v0.5 https://github.com/KarypisLab/METIS.git METIS
 git clone --depth 1 -b METIS-v5.1.1-DistDGL-0.5 https://github.com/KarypisLab/GKlib.git METIS/GKlib
 sed -i "s|//#define IDXTYPEWIDTH 32|#define IDXTYPEWIDTH 32|g" METIS\include\metis.h
@@ -46,8 +47,10 @@ mkdir %BUILD_DEP_DIR%\metis\include
 copy METIS\include\metis.h %BUILD_DEP_DIR%\metis\include
 mkdir %BUILD_DEP_DIR%\metis\lib
 copy build_metis\libmetis\Release\metis.lib %BUILD_DEP_DIR%\metis\lib
+echo "---- ENDED METIS INSTALLATION ----"
 
 :: libxml2
+echo "---- libxml2 INSTALLATION ----"
 git clone --depth 1 -b v2.10.4 https://github.com/GNOME/libxml2.git libxml2
 pushd libxml2\win32
 cscript configure.js compiler=msvc iconv=no icu=no zlib=no lzma=no python=no ^
@@ -55,8 +58,10 @@ cscript configure.js compiler=msvc iconv=no icu=no zlib=no lzma=no python=no ^
 nmake /f Makefile.msvc
 nmake /f Makefile.msvc install
 popd
+echo "---- ENDED libxml2 INSTALLATION ----"
 
 :: boost
+echo "---- BOOST INSTALLATION ----"
 set "BOOST_VERSION=1.80.0"
 curl -LO https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION:.=_%.zip
 7z x boost_%BOOST_VERSION:.=_%.zip > nul
@@ -87,13 +92,17 @@ call bootstrap.bat
     --layout=system ^
     --with-serialization --with-filesystem --with-date_time --with-chrono --with-thread --with-regex --with-system
 popd
+echo "---- ENDED BOOST INSTALLATION ----"
 
 :: hdf5
+echo "---- HDF5 INSTALLATION ----"
 git clone --depth 1 -b hdf5-1_10_3 https://github.com/HDFGroup/hdf5.git hdf5
 cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/hdf5 -DBUILD_TESTING=OFF -DHDF5_BUILD_TOOLS=OFF -DHDF5_BUILD_EXAMPLES=OFF
 cmake --build build_hdf5 --config Release --target install
+echo "---- ENDED HDF5 INSTALLATION ----"
 
 :: med
+echo "---- MED INSTALLATION ----"
 REM The download link changed (it's generated after filing a form on salome website)
 echo "downloading med"
 curl -LO https://files.salome-platform.org/Salome/medfile/med-%MED_VERSION%.tar.gz
@@ -110,7 +119,6 @@ cmake --build build_med --config Release --target install
 
 git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/configuration.git configuration
 
-pip install scipy
 
 git clone --depth 1 -b V%VERSION:.=_% http://git.salome-platform.org/gitpub/tools/medcoupling.git medcoupling
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DEP_DIR%/medcoupling ^
@@ -124,17 +132,22 @@ cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=%BUILD_DEP
   -DPYTHON_EXECUTABLE=%PYTHON_ROOT%\python.exe ^
   -DMEDCOUPLING_PARTITIONER_METIS=OFF -DMEDCOUPLING_PARTITIONER_SCOTCH=OFF -DMEDCOUPLING_PARTITIONER_METIS=ON -DMEDCOUPLING_USE_64BIT_IDS=OFF
 cmake --build build_medcoupling --config Release --target install
+popd
+echo "---- ENDED MED INSTALLATION ----"
 
 :: build wheel
+echo "---- BUILDING WHEEL ----"
 xcopy /y %BUILD_DEP_DIR%\libxml2\bin\*.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DEP_DIR%\hdf5\bin\hdf5.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DEP_DIR%\med\lib\medC.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DEP_DIR%\medcoupling\lib\*.dll %MEDCOUPLING_BUILD_DIR%
 rem  xcopy /y %BUILD_DEP_DIR%\boost\lib\*.dll %MEDCOUPLING_BUILD_DIR%
 
+echo "Checking compilation file integrity"
 curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Dependencies_x64_Release_.without.peview.exe.zip
 7z x Dependencies_x64_Release_.without.peview.exe.zip
 Dependencies.exe -modules %MEDCOUPLING_BUILD_DIR%\_medcoupling.pyd
+echo "Ended checking compilation file integrity"
 
 cd %SCRIPT_PATH%
 echo %MEDCOUPLING_BUILD_DIR%
@@ -146,6 +159,7 @@ set ORIGIN_WHEEL_FILE="medcoupling-%VERSION%-py3-none-any.whl"
 set WHEEL_FILE="medcoupling-%VERSION%-%ABI%-%ABI%-win_amd64.whl"
 
 move /y ".\dist\%ORIGIN_WHEEL_FILE%" ".\dist\%WHEEL_FILE%"
+echo "---- ENDED BUILDING WHEEL ----"
 
 REM python -m pip install %WHEEL_FILE%
 
