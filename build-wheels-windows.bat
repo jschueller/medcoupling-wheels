@@ -27,7 +27,6 @@ mkdir %BUILD_DEP_DIR%
 mkdir %MEDCOUPLING_BUILD_DIR%
 
 python --version
-python -m pip install build scipy
 
 call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 REM call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
@@ -51,7 +50,7 @@ copy METIS\include\metis.h %BUILD_DIR%\metis\include
 mkdir %BUILD_DIR%\metis\lib
 copy build_metis\libmetis\Release\metis.lib %BUILD_DIR%\metis\lib
 dir %BUILD_DIR%\metis
-echo "---- ENDED METIS INSTALLATION ----"
+echo "---- ENDED METIS INSTALLATION ----
 
 :: libxml2
 echo "---- libxml2 INSTALLATION ----"
@@ -125,6 +124,8 @@ dir
 cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=%BUILD_DIR%\med -DHDF5_ROOT_DIR=%BUILD_DIR%\hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
+
+python -m pip install scipy
 
 git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/configuration.git configuration
 
