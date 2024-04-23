@@ -18,12 +18,10 @@ echo "PATH=%PATH%"
 
 set DEP_DIR="%SCRIPTPATH%\dependencies_tmp"
 set BUILD_DIR="%SCRIPTPATH%\build_dir"
-set BUILD_DEP_DIR="%BUILD_DIR%\dependencies"
 set MEDCOUPLING_BUILD_DIR="%BUILD_DIR%\medcoupling"
 set PYTHON_ROOT=%pythonLocation%
 
 mkdir %DEP_DIR%
-mkdir %BUILD_DEP_DIR%
 mkdir %MEDCOUPLING_BUILD_DIR%
 
 python --version
@@ -157,7 +155,7 @@ xcopy /y %BUILD_DIR%\libxml2\bin\*.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DIR%\hdf5\bin\hdf5.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DIR%\med\lib\medC.dll %MEDCOUPLING_BUILD_DIR%
 xcopy /y %BUILD_DIR%\medcoupling\lib\*.dll %MEDCOUPLING_BUILD_DIR%
-rem  xcopy /y %BUILD_DEP_DIR%\boost\lib\*.dll %MEDCOUPLING_BUILD_DIR%
+rem  xcopy /y %BUILD_DIR%\boost\lib\*.dll %MEDCOUPLING_BUILD_DIR%
 
 echo "Checking compilation file integrity"
 curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Dependencies_x64_Release_.without.peview.exe.zip
