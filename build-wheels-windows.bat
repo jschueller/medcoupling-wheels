@@ -2,7 +2,7 @@
 
 set VERSION=%1%
 set ABI=%2%
-set "MED_VERSION=4.1.1"
+set MED_VERSION="4.1.1"
 set PY_VER=%ABI:~2,1%.%ABI:~3%
 set PLATFORM="win_amd64"
 set PYTAG=%ABI%
@@ -146,8 +146,6 @@ echo "---- ENDED MED INSTALLATION ----"
 
 dir %BUILD_DIR%\medcoupling
 
-popd
-dir
 
 :: build wheel
 echo "---- BUILDING WHEEL ----"
@@ -162,6 +160,9 @@ curl -LO https://github.com/lucasg/Dependencies/releases/download/v1.11.1/Depend
 7z x Dependencies_x64_Release_.without.peview.exe.zip
 Dependencies.exe -modules %MEDCOUPLING_BUILD_DIR%\_medcoupling.pyd
 echo "Ended checking compilation file integrity"
+
+popd
+dir
 
 cd %SCRIPT_PATH%
 echo %MEDCOUPLING_BUILD_DIR%
