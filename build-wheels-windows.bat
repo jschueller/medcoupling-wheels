@@ -39,7 +39,7 @@ popd
 
 :: boost
 set "BOOST_VERSION=1.80.0"
-curl -LO https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION:.=_%.zip
+curl -LO https://archives.boost.io/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION:.=_%.zip
 7z x boost_%BOOST_VERSION:.=_%.zip > nul
 pushd boost_%BOOST_VERSION:.=_%
 call bootstrap.bat
@@ -84,12 +84,11 @@ cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libra
 cmake --build build_med --config Release --target install
 
 :: configuration
-git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/configuration.git
+git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/configuration.git
 
 :: medcoupling
 pip install scipy
-git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/medcoupling.git
-patch -p1 -i %GITHUB_WORKSPACE%\medcoupling913-numpy2.patch -d medcoupling
+git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/medcoupling.git
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Libraries/medcoupling ^
   -DMEDFILE_ROOT_DIR=C:/Libraries/med ^
   -DMETIS_ROOT_DIR=C:/Libraries/metis ^

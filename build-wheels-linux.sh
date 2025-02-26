@@ -19,13 +19,11 @@ export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 cd /tmp
 
 # configuration
-git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://git.salome-platform.org/gitpub/tools/configuration.git
+git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://github.com/SalomePlatform/configuration.git
 
 # medcoupling
 pip install scipy
-git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://git.salome-platform.org/gitpub/tools/medcoupling.git
-patch -p1 -i /io/medcoupling913-numpy2.patch -d medcoupling
-sed -i "s|PYTHON_LIBRARIES|ZZZ|g" medcoupling/src/{MEDCoupling_Swig,MEDPartitioner_Swig,MEDLoader/Swig,PyWrapping,RENUMBER_Swig,ParaMEDMEM_Swig}/CMakeLists.txt  # dont explicitely link Python libs for Unix wheels
+git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://github.com/SalomePlatform/medcoupling.git
 cmake -S medcoupling -B build_medcoupling -LAH -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install \
   -DMEDCOUPLING_BUILD_DOC=OFF -DMEDCOUPLING_BUILD_TESTS=OFF -DCONFIGURATION_ROOT_DIR=$PWD/configuration \
   -DPYTHON_EXECUTABLE=/opt/python/${PYTAG}-${ABI}/bin/python \
