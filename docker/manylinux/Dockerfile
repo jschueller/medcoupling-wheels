@@ -23,7 +23,7 @@ RUN curl -fsSL https://download.gnome.org/sources/libxml2/2.10/libxml2-2.10.3.ta
  && ./configure --without-python && make > /dev/null 2>&1 && make install > /dev/null 2>&1 && cd - && rm -r libxml2*
 
 # med
-RUN curl -fSsL https://www.code-saturne.org/releases/external/med-4.1.1.tar.gz | tar xz \
- && cmake -S med-4.1.1_SRC -B build_med -LAH -DCMAKE_BUILD_TYPE=Release \
+RUN curl -fSsL https://files.salome-platform.org/Salome/medfile/med-4.2.0.tar.gz | tar xz \
+ && cmake -S med-4.2.0 -B build_med -LAH -DCMAKE_BUILD_TYPE=Release \
       -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF -DHDF5_DIR=$PWD/install/share/cmake/hdf5 \
  && cmake --build build_med --target install

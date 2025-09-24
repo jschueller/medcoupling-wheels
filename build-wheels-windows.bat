@@ -75,7 +75,7 @@ cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=C:/Libraries/hdf5 -DBUIL
 cmake --build build_hdf5 --config Release --target install
 
 :: med
-set "MED_VERSION=4.1.1"
+set "MED_VERSION=4.2.0"
 curl -LO https://www.code-saturne.org/releases/external/med-%MED_VERSION%.tar.gz
 7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
