@@ -76,10 +76,11 @@ cmake --build build_hdf5 --config Release --target install
 
 :: med
 set "MED_VERSION=4.2.0"
-curl -LO https://www.code-saturne.org/releases/external/med-%MED_VERSION%.tar.gz
+::https://files.salome-platform.org/Salome/medfile/med-4.2.0.tar.gz
+curl -L -o med-%MED_VERSION%.tar.gz https://files.catbox.moe/zm3to1.gz
 7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
-cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
+cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
 
