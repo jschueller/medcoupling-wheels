@@ -127,6 +127,6 @@ pip install %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_
 pushd %GITHUB_WORKSPACE%
 
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasNumPyBindings()"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasSciPyBindings()"
 python .\medcoupling\src\MEDCoupling_Swig\MEDCouplingNumPyTest.py

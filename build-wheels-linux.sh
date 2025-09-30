@@ -30,7 +30,7 @@ cmake -LAH -DCMAKE_BUILD_TYPE=Release \
   -DMEDCOUPLING_BUILD_DOC=OFF -DMEDCOUPLING_BUILD_TESTS=OFF -DCONFIGURATION_ROOT_DIR=$PWD/configuration \
   -DPYTHON_EXECUTABLE=/opt/python/${PYTAG}-${ABI}/bin/python \
   -DPYTHON_INCLUDE_DIR=/opt/python/${PYTAG}-${ABI}/include/python${PYVERD} -DPYTHON_LIBRARY=dummy \
-  -DMEDCOUPLING_PARTITIONER_SCOTCH=OFF -DMEDCOUPLING_USE_64BIT_IDS=OFF \
+  -DMEDCOUPLING_PARTITIONER_SCOTCH=OFF -DMEDCOUPLING_USE_64BIT_IDS=ON \
   -DCMAKE_INSTALL_RPATH="${PWD}/install/lib;/usr/local/lib" -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
   -B build_medcoupling -S medcoupling
 cmake --build build_medcoupling --target install
@@ -53,6 +53,7 @@ auditwheel repair medcoupling-${VERSION}-${TAG}.whl -w /io/wheelhouse/
 cd /tmp
 pip install medcoupling --pre --no-index -f /io/wheelhouse
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasNumPyBindings()"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasSciPyBindings()"
+python -c "import medcoupling as mc; assert mc.MEDCouplingSizeOfIDs() == 64"
 python ./medcoupling/src/MEDCoupling_Swig/MEDCouplingNumPyTest.py
