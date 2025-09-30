@@ -19,11 +19,17 @@ export PATH=/opt/python/${PYTAG}-${ABI}/bin/:$PATH
 cd /tmp
 
 # configuration
-git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://github.com/SalomePlatform/configuration.git
+SALOME_VERSION=`echo "V${VERSION}"|sed "s|\.|_|g"`
+git clone --depth 1 -b ${SALOME_VERSION} https://github.com/SalomePlatform/configuration.git
 
 # medcoupling
+VERSION=9.16.0dev0
+GIT_COMMIT=123ce02
 pip install scipy
-git clone --depth 1 -b V`echo ${VERSION}|sed "s|\.|_|g"` https://github.com/SalomePlatform/medcoupling.git
+git clone --depth 100 https://github.com/SalomePlatform/medcoupling.git
+cd medcoupling
+git checkout ${GIT_COMMIT}
+cd ..
 cmake -LAH -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=$PWD/install \
   -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
