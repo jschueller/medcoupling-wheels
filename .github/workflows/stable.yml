@@ -19,11 +19,6 @@ jobs:
         with:
           miniforge-version: latest
           conda-remove-defaults: true
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: wheelhouse/medcoupling-${{ matrix.version }}-${{ matrix.abi }}-${{ matrix.abi }}-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
       - name: Upload
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash -l {0}
@@ -69,11 +64,6 @@ jobs:
         with:
           miniforge-version: latest
           conda-remove-defaults: true
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: wheelhouse/medcoupling-${{ matrix.version }}-${{ matrix.abi }}-${{ matrix.abi }}-win_amd64.whl
       - name: Upload
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash -l {0}
