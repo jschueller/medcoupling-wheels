@@ -39,7 +39,7 @@ popd
 
 :: boost
 set "BOOST_VERSION=1.80.0"
-curl -LO https://boostorg.jfrog.io/artifactory/main/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION:.=_%.zip
+curl -LO https://archives.boost.io/release/%BOOST_VERSION%/source/boost_%BOOST_VERSION:.=_%.zip
 7z x boost_%BOOST_VERSION:.=_%.zip > nul
 pushd boost_%BOOST_VERSION:.=_%
 call bootstrap.bat
@@ -75,21 +75,21 @@ cmake -LAH -S hdf5 -B build_hdf5 -DCMAKE_INSTALL_PREFIX=C:/Libraries/hdf5 -DBUIL
 cmake --build build_hdf5 --config Release --target install
 
 :: med
-set "MED_VERSION=4.1.1"
-curl -LO https://www.code-saturne.org/releases/external/med-%MED_VERSION%.tar.gz
+set "MED_VERSION=4.2.0"
+::https://files.salome-platform.org/Salome/medfile/med-4.2.0.tar.gz
+curl -L -o med-%MED_VERSION%.tar.gz https://files.catbox.moe/zm3to1.gz
 7z x med-%MED_VERSION%.tar.gz > nul
 7z x med-%MED_VERSION%.tar > nul
-cmake -LAH -S med-%MED_VERSION%_SRC -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
+cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries/med -DHDF5_ROOT_DIR=C:/Libraries/hdf5 ^
   -DMEDFILE_BUILD_TESTS=OFF -DMEDFILE_INSTALL_DOC=OFF
 cmake --build build_med --config Release --target install
 
 :: configuration
-git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/configuration.git
+git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/configuration.git
 
 :: medcoupling
 pip install scipy
-git clone --depth 1 -b V%VERSION:.=_% https://git.salome-platform.org/gitpub/tools/medcoupling.git
-patch -p1 -i %GITHUB_WORKSPACE%\medcoupling913-numpy2.patch -d medcoupling
+git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/medcoupling.git
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Libraries/medcoupling ^
   -DMEDFILE_ROOT_DIR=C:/Libraries/med ^
   -DMETIS_ROOT_DIR=C:/Libraries/metis ^
@@ -127,6 +127,6 @@ pip install %GITHUB_WORKSPACE%\wheelhouse\medcoupling-%VERSION%-%ABI%-%ABI%-win_
 pushd %GITHUB_WORKSPACE%
 
 python -c "import medcoupling as mc; print(mc.__version__); mc.ShowAdvancedExtensions()"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasNumPyBindings())"
-python -c "import medcoupling as mc; print(mc.MEDCouplingHasSciPyBindings())"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasNumPyBindings()"
+python -c "import medcoupling as mc; assert mc.MEDCouplingHasSciPyBindings()"
 python .\medcoupling\src\MEDCoupling_Swig\MEDCouplingNumPyTest.py

@@ -17,29 +17,24 @@ Classifier: Intended Audience :: Science/Research
 Requires-Dist: scipy
 
 
-# MEDCoupling
+MEDCoupling
+===========
 
-[![pypi](https://img.shields.io/pypi/v/medcoupling.svg?style=flat-square)](https://pypi.org/project/medcoupling)
-https://github.com/jschueller/medcoupling-wheels
-[![github](https://github.com/jschueller/medcoupling-wheels/actions/workflows/stable.yml/badge.svg?branch=master)](https://github.com/jschueller/medcoupling-wheels/actions/workflows/stable.yml)
+MEDCoupling is a powerful library to manipulate meshes and fields from the `SALOME <https://www.salome-platform.org/>`_ platform.
 
+Refer to the `documentation <https://docs.salome-platform.org/latest/dev/MEDCoupling/developer/index.html>`_.
 
-MEDCoupling is a powerful library to manipulate meshes and fields from the [SALOME](https://www.salome-platform.org/) platform.
+Built from `github <https://github.com/jschueller/medcoupling-wheels>`_.
 
-Refer to the [documentation](https://docs.salome-platform.org/latest/dev/MEDCoupling/developer/index.html).
+Installation from PyPI
+----------------------
 
-## Installation from PyPI
+To install MEDCoupling, you can now simply do::
 
-To install MEDCoupling, you can now simply do
-
-```
-pip install -U medcoupling
-```
+    pip install -U medcoupling
 
 Binary wheels are available for 64-bit Windows (`win_amd64`) and Linux-like platforms (`manylinux2014_x86_64`).
 
-To ensure that MEDCoupling is well installed, try importing it with:
+To ensure that MEDCoupling is well installed, try importing it with::
 
-```
-import medcoupling  # should not raise error
-```
+    import medcoupling  # should not raise error
