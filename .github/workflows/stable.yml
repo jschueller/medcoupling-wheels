@@ -14,7 +14,7 @@ jobs:
       - name: Build
         run: |
           docker build docker/manylinux -t medcoupling/manylinux
-          docker run --rm -e MAKEFLAGS='-j2' -v `pwd`:/io medcoupling/manylinux /io/build-wheels-linux.sh ${{ matrix.version }} ${{ matrix.abi }}
+          docker run --rm -e MAKEFLAGS='-j4' -v `pwd`:/io medcoupling/manylinux /io/build-wheels-linux.sh ${{ matrix.version }} ${{ matrix.abi }}
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
