@@ -85,11 +85,17 @@ cmake -LAH -S med-%MED_VERSION% -B build_med -DCMAKE_INSTALL_PREFIX=C:/Libraries
 cmake --build build_med --config Release --target install
 
 :: configuration
-git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/configuration.git
+set "SALOME_VERSION=V%VERSION:.=_%"
+git clone --depth 1 -b %SALOME_VERSION% https://github.com/SalomePlatform/configuration.git
 
 :: medcoupling
 pip install scipy
-git clone --depth 1 -b V%VERSION:.=_% https://github.com/SalomePlatform/medcoupling.git
+set "VERSION=9.16.0dev0"
+set "GIT_COMMIT=123ce02"
+git clone --depth 100 https://github.com/SalomePlatform/medcoupling.git
+cd medcoupling
+git checkout %GIT_COMMIT%
+cd ..
 cmake -LAH -S medcoupling -B build_medcoupling -DCMAKE_INSTALL_PREFIX=C:/Libraries/medcoupling ^
   -DMEDFILE_ROOT_DIR=C:/Libraries/med ^
   -DMETIS_ROOT_DIR=C:/Libraries/metis ^
